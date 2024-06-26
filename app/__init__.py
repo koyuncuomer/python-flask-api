@@ -6,6 +6,7 @@ from config import Config
 db = SQLAlchemy()
 migrate = Migrate()
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -13,9 +14,10 @@ def create_app():
     migrate.init_app(app, db)
 
     with app.app_context():
-        from .routes import users, posts, comments
+        from .routes import users, posts, comments, todos
         app.register_blueprint(users.bp)
         app.register_blueprint(posts.bp)
         app.register_blueprint(comments.bp)
+        app.register_blueprint(todos.bp)
 
     return app

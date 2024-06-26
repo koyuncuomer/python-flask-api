@@ -12,6 +12,7 @@ class User(db.Model):
     company = db.Column(db.JSON)
 
     posts = db.relationship('Post', backref='user', lazy=True)
+    todos = db.relationship('Todo', backref='user', lazy=True)
 
     def to_dict(self):
         return {
@@ -57,4 +58,19 @@ class Comment(db.Model):
             'name': self.name,
             'email': self.email,
             'body': self.body
+        }
+
+
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    title = db.Column(db.String(200))
+    completed = db.Column(db.Boolean, default=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'userId': self.user_id,
+            'title': self.title,
+            'completed': self.completed
         }
