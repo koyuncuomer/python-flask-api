@@ -13,6 +13,7 @@ class User(db.Model):
 
     posts = db.relationship('Post', backref='user', lazy=True)
     todos = db.relationship('Todo', backref='user', lazy=True)
+    albums = db.relationship('Album', backref='user', lazy=True)
 
     def to_dict(self):
         return {
@@ -73,4 +74,36 @@ class Todo(db.Model):
             'userId': self.user_id,
             'title': self.title,
             'completed': self.completed
+        }
+
+
+class Album(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    title = db.Column(db.String(200))
+
+    photos = db.relationship('Photo', backref='album', lazy=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'userId': self.user_id,
+            'title': self.title
+        }
+
+
+class Photo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    album_id = db.Column(db.Integer, db.ForeignKey('album.id'), nullable=False)
+    title = db.Column(db.String(200))
+    url = db.Column(db.String(200))
+    thumbnail_url = db.Column(db.String(200))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'albumId': self.album_id,
+            'title': self.title,
+            'url': self.url,
+            'thumbnailUrl': self.thumbnail_url
         }

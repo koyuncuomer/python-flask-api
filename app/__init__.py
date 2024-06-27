@@ -14,10 +14,12 @@ def create_app():
     migrate.init_app(app, db)
 
     with app.app_context():
-        from .routes import users, posts, comments, todos
+        from .routes import users, posts, comments, todos, albums, photos
         app.register_blueprint(users.bp)
         app.register_blueprint(posts.bp)
         app.register_blueprint(comments.bp)
         app.register_blueprint(todos.bp)
+        app.register_blueprint(albums.bp)
+        app.register_blueprint(photos.bp)
 
     return app
