@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.models import Album, db
+from app.models import Album, Photo, db
 
 bp = Blueprint('albums', __name__, url_prefix='/albums')
 
@@ -41,3 +41,10 @@ def delete_album(id):
     db.session.delete(album)
     db.session.commit()
     return '', 204
+
+
+@bp.route('/<int:album_id>/photos', methods=['GET'])
+def get_album_photos(album_id):
+    album = Album.query.get_or_404(album_id)
+    photos = Photo.query.filter_by(album_id=album_id).all()
+    return jsonify([photo.to_dict() for photo in photos])

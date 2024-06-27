@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.models import Post, db
+from app.models import Post, Comment, db
 
 bp = Blueprint('posts', __name__, url_prefix='/posts')
 
@@ -41,3 +41,10 @@ def delete_post(id):
     db.session.delete(post)
     db.session.commit()
     return '', 204
+
+
+@bp.route('/<int:post_id>/comments', methods=['GET'])
+def get_post_comments(post_id):
+    post = Post.query.get_or_404(post_id)
+    comments = Comment.query.filter_by(post_id=post_id).all()
+    return jsonify([comment.to_dict() for comment in comments])

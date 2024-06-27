@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.models import User, db
+from app.models import User, Post, Album, Todo, db
 
 bp = Blueprint('users', __name__, url_prefix='/users')
 
@@ -41,3 +41,24 @@ def delete_user(id):
     db.session.delete(user)
     db.session.commit()
     return '', 204
+
+
+@bp.route('/<int:user_id>/posts', methods=['GET'])
+def get_user_posts(user_id):
+    user = User.query.get_or_404(user_id)
+    posts = Post.query.filter_by(user_id=user_id).all()
+    return jsonify([post.to_dict() for post in posts])
+
+
+@bp.route('/<int:user_id>/albums', methods=['GET'])
+def get_user_albums(user_id):
+    user = User.query.get_or_404(user_id)
+    albums = Album.query.filter_by(user_id=user_id).all()
+    return jsonify([album.to_dict() for album in albums])
+
+
+@bp.route('/<int:user_id>/todos', methods=['GET'])
+def get_user_todos(user_id):
+    user = User.query.get_or_404(user_id)
+    todos = Todo.query.filter_by(user_id=user_id).all()
+    return jsonify([todo.to_dict() for todo in todos])
